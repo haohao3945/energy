@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>给焦虑的你</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f4f4f4;
+            text-align: center;
+            font-family: '宋体', 'Songti', 'SimSun', sans-serif;
+            color: #333;
+            margin: 50px;
+        }
+
+        #affirmation-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden; /* Hide overflow for slider effect */
+        }
+
+        h1 {
+            color: #3498db;
+            font-size: 30px;
+            margin: 0;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 16px;
+        }
+
+        #affirmation-image {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        #affirmation-text {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        #question-container {
+            margin-bottom: 20px;
+        }
+
+        #question-text {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        #user-answer {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        #confirm-button, #answer-button {
+            font-size: 16px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+			margin:0 auto;
+        }
+
+        #navigation button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: #3498db;
+            transition: color 0.3s ease;
+        }
+
+        #navigation button:hover {
+            color: #2980b9;
+        }
+
+        /* Your existing feedback section remains unchanged */
+		#feedback{
+			display:none;
+		}
+
+        /* Additional style for the textarea */
+        #feedback-textarea {
+            display: none;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="affirmation-container">
+        <h1><strong>提升你的能量！</strong></h1>
+        <img id="affirmation-image" src="affirmation0.jpg" alt="Affirmation Image">
+        <p id="affirmation-text">Loading...</p>
+
+        <div id="question-container">
+            <p id="question-text">开始吧。</p>
+            <button id="answer-button" onclick="toggleAnswer()" style="display:none;">修改答案</button>
+            <textarea id="user-answer" placeholder="在这里输入您的回答" style="display: none;"></textarea>
+            <button id="confirm-button" onclick="confirmAnswer()" style="display: none;">确认</button>
+        </div>
+		<div id="final-container" style="display:none;">
+			<p> 好了，你已经完成了自己的能量管理，记得实施哦。喜欢这个app 的话，可以把app 存在手机里，下面有教程！</p>
+			
+		</div>
+        <div id="navigation">
+            <button class="arrow-left" style="font-size:15px;" onclick="prevAffirmation()">&larr;上一页</button>
+            <button class="arrow-right" style="font-size:15px;" onclick="nextAffirmation()">下一页&rarr;</button>
+        </div>
+    </div>
+     <div class="section " id="feedback" style="margin-top:80px;" >
+            <div class="row">
+
+                <div class="col-12 col-6" style="margin-bottom:30px;">
+                    <h1>将 Web App 添加到主屏幕</h1>
+                    <p>如果你喜欢这个app, 几天后还想再审视自己的能量，可以在浏览器中打开，然后选择“添加到主屏幕”以创建应用的快捷方式。</p>
+                    <iframe src="https://www.youtube.com/embed/dTFaSVUlmA4?si=haZAEGNuYLF5ZXxc" frameborder="0" style="width:100%; min-height:400px;"allowfullscreen></iframe>
+                </div>
+                <div class="col-12 col-6" >
+                    <h1>给我们一点意见</h1>
+                    <form action="https://script.google.com/macros/s/AKfycbxHQefQKgU5bVNMaDdbp_oP8mge0U2UAcvx2Y9M0c8kOJxpuCfJUbimgESUCeKJrZ2blg/exec" method="POST">
+                        <label for="feedback">提供反馈：</label>
+                        <textarea id="moreDetails" name="details" class="form-control" id="feedback" rows="3"></textarea>
+                        <button type="submit" class="btn btn-primary mt-2">提交反馈</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <!-- Your existing feedback section remains unchanged -->
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <script>
+		var firsttime = true;
+		function remove(){
+			if (firsttime ===true){
+				affirmations.shift();
+				currentAffirmationIndex = currentAffirmationIndex - 1;
+				document.getElementById("answer-button").style.display = "block";
+				firsttime = false;
+				document.getElementById("affirmation-text").style.textAlign = "left";
+
+			}	
+		}	
+		
+        var affirmations = [
+            { text: "改变能量不是一天两天的事情，我们需要时刻检视自己的能量，发现不对劲的地方，然后做出调整。点击 '下一页' 开始检视自己的能量", image: "energy0.jpg", defaultAnswer: "" },
+            { text: "我们第一要做的事情，就是检视自己有没有因为有的没的的事情，浪费能量。有的话，尽量远离。\n最简单的，就是看看自己有没有抱怨，愤怒不满。\n\n所以点击‘修改答案’回答以下问题吧：\n1.你今天有抱怨愤怒吗？ \n2.那些事情是可以断舍离，直接忽略或者远离 \n3.那些事情是非处理不可的。（记住这些，下一步我们进行处理）", image: "energy1.jpg", defaultAnswer: "未回答" },
+			{ text: "面对环境，我们可以负面的看待，也可以正面看待，训练自己转变思维把所有的事情看成可以帮助自己的事情。比如被裁员，可以看得好像世界末日，也可以看成是逼自己成长改变的机会，两者面对同样的处境，会有不同的收获。\n\n所以，写下: \n1.今天发生你觉得不顺的事情 \n2.你对那件事情的看法。 \n3.既然有那种观念导致不顺，那么应该保持什么观点？", image: "energy2.jpg", defaultAnswer: "未回答" },
+			{ text: "接着，发现生活美好的地方，可以给自己带来发现机会的眼光。比如你看一个人很多缺点，你会很讨厌一个人。但是尝试发现他的优点，可能可以带来合作机会\n\n所以，写下今天值得感恩的3件事情", image: "energy3.jpg", defaultAnswer: "未回答" },
+            { text: "给生活带来一些进度，确实可以提升自己的状态。\n\n所以，写下明天你想完成的一件事情！可能是学习进度，可能是一件可以让你继续感恩生活的事情。等等等等", image: "energy4.jpg", defaultAnswer: "未回答" },
+            { text: "接触大自然，也是很好提升能量的方式，所以你愿意给自己一个接触大自然的机会吗？\n\n愿意的话，就写下时间和地点吧", image: "energy5.jpg", defaultAnswer: "未回答" },
+            { text: "专注力是很珍贵的\n\n1.找出这几天内偷走你专注力的东西 \n2.然后写下接下来几天可能偷走你专注力的东西", image: "energy6.jpg", defaultAnswer: "未回答" },
+            { text: "", image: "energy0.jpg", defaultAnswer: "" },
+
+ // Add more affirmations as needed
+        ];
+
+        var currentAffirmationIndex = 0;
+
+		function showAffirmation(index) {
+			var affirmation = affirmations[index];
+			document.getElementById('affirmation-text').innerHTML = affirmation.text.replace(/\n/g, '<br>');
+			document.getElementById('affirmation-image').src = affirmation.image;
+
+			// Replace newline characters with HTML line breaks
+			document.getElementById('question-text').innerHTML = affirmation.defaultAnswer.replace(/\n/g, '<br>');
+		}
+
+		function toggleAnswer() {
+			var textarea = document.getElementById('user-answer');
+			var confirmButton = document.getElementById('confirm-button');
+			var answerButton = document.getElementById('answer-button');
+
+			textarea.style.display = 'block';
+			textarea.placeholder = affirmations[currentAffirmationIndex].defaultAnswer;  // Set placeholder
+			confirmButton.style.display = 'block';
+			answerButton.style.display = 'none';
+		}
+
+		function confirmAnswer() {
+			var textarea = document.getElementById('user-answer');
+			var confirmButton = document.getElementById('confirm-button');
+			var answerButton = document.getElementById('answer-button');
+			var questionText = document.getElementById('question-text');
+			var affirmationText = document.getElementById('affirmation-text');
+
+			textarea.style.display = 'none';
+			confirmButton.style.display = 'none';
+			answerButton.style.display = 'block';
+
+			// Replace newline characters with HTML line breaks
+			var userAnswer = textarea.value.replace(/\n/g, '<br>');
+			
+			// Update the JSON data with the user's input
+			affirmations[currentAffirmationIndex].defaultAnswer = userAnswer;
+			
+			// Display the user's input with line breaks in the HTML
+			questionText.innerHTML = userAnswer;
+			affirmationText.innerText = affirmations[currentAffirmationIndex].text;
+		}
+
+        function nextAffirmation() {
+            currentAffirmationIndex = (currentAffirmationIndex + 1) % affirmations.length;
+            showAffirmation(currentAffirmationIndex);
+			remove();
+			checklast();
+        }
+
+        function prevAffirmation() {
+            currentAffirmationIndex = (currentAffirmationIndex - 1 + affirmations.length) % affirmations.length;
+            showAffirmation(currentAffirmationIndex);
+			remove();
+			checklast();
+        }
+		
+		function checklast(){
+			if (currentAffirmationIndex === affirmations.length-1){
+				document.getElementById('question-container').style.display = "none";
+				document.getElementById('final-container').style.display="block";
+				document.getElementById('feedback').style.display="block";
+				
+			}else{
+				document.getElementById('question-container').style.display = "block";
+				document.getElementById('final-container').style.display="none";			
+			}
+		}
+
+        // Initial display
+        showAffirmation(currentAffirmationIndex);
+    </script>
+</body>
+
+</html>
