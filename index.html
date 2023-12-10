@@ -194,7 +194,6 @@
 
 		function confirmAnswer() {
 			var textarea = document.getElementById('user-answer');
-			textarea.value="";
 			var confirmButton = document.getElementById('confirm-button');
 			var answerButton = document.getElementById('answer-button');
 			var questionText = document.getElementById('question-text');
@@ -213,6 +212,8 @@
 			// Display the user's input with line breaks in the HTML
 			questionText.innerHTML = userAnswer;
 			affirmationText.innerText = affirmations[currentAffirmationIndex].text;
+			textarea.value="";
+
 		}
 
         function nextAffirmation() {
